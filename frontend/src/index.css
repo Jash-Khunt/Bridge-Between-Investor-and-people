@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.hero-gradient {
+  background: linear-gradient(90deg, #0d9488 0%, #0f766e 100%);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+}
