@@ -5,6 +5,7 @@ import {
   getAdviceById,
   postAdvice,
   updateAdvice,
+  deleteAdvice
 } from "../controllers/advice.controller.js";
 const router = express.Router();
 
@@ -12,4 +13,5 @@ router.get("/", getAdviceList);
 router.get("/:id", getAdviceById);
 router.post("/", protectRoute, checkRole(["advisor"]), postAdvice);
 router.put("/:id", protectRoute, checkRole(["advisor"]), updateAdvice);
+router.delete("/:id", protectRoute, checkRole(["advisor"]), deleteAdvice);
 export default router;

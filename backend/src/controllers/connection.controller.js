@@ -167,18 +167,35 @@ export const getConnections = async (req, res) => {
     if (req.user.role === "investor") {
       connections = await ConnectionRequest.find({
         investorId: req.user._id,
-      }).populate("businessIdeaId", "title category fundingRequired status");
+      })
+        .populate({
+          path: "businessIdeaId",
+          select: "title category fundingRequired status",
+          populate: {
+            path: "entrepreneurId",
+            select: "name email",
+          },
+        })
+        .sort({ createdAt: -1 });
     } else if (req.user.role === "entrepreneur") {
       const businessIdeas = await BusinessIdea.find({
         entrepreneurId: req.user._id,
       });
+
       const ideaIds = businessIdeas.map((idea) => idea._id);
 
       connections = await ConnectionRequest.find({
         businessIdeaId: { $in: ideaIds },
       })
-        .populate("investorId", "name email")
-        .populate("businessIdeaId", "title category");
+        .populate({
+          path: "investorId",
+          select: "name email phone location",
+        })
+        .populate({
+          path: "businessIdeaId",
+          select: "title category fundingRequired status",
+        })
+        .sort({ createdAt: -1 });
     }
 
     res.status(200).json(connections || []);

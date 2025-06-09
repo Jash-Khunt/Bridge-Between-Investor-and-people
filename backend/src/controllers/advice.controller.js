@@ -150,3 +150,21 @@ export const updateAdvice = async (req, res) => {
     });
   }
 };
+
+export const deleteAdvice = async (req, res) => {
+  try {
+    const advice = await Advice.findById(req.params.id);
+    if (!advice) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Advice not found" });
+    }
+    if (advice.advisorId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: "Unauthorized" });
+    }
+    await Advice.deleteOne({ _id: req.params.id });
+    res.status(200).json({ success: true, message: "Advice deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
